@@ -26,7 +26,7 @@ Language in this framework does not grow from left to right; it crystallizes fro
    - **Step 3 (Low Priority — Connectives):** Functional glue words emerge last (articles, prepositions, conjunctions).
 
 2. **Vertical Axis — Micro-Diffusion (Word Level):** *From lexical root to inflectional endings.*
-   - Every word—whether a core pillar born at Step 1 or a functional preposition born at Step 3—crystallizes from the inside out: first its **lexical root** ($\mu=1$), then its **internal thematic/derivational affixes** ($\mu=2$), and finally its **relational inflectional endings** ($\mu=3$).
+   - Every word—whether a core pillar born at Step 1 or a functional preposition born at Step 3—crystallizes from the inside out: first its **lexical root** ($`\mu=1`$), then its **internal thematic/derivational affixes** ($`\mu=2`$), and finally its **relational inflectional endings** ($`\mu=3`$).
 
 ---
 
@@ -53,35 +53,37 @@ To clearly observe morphological agreement across words, we use the Italian sent
 Look at the core noun `gatt_` (born at Step 1): it holds its final inflectional character (`_`: will it be singular `-o` or plural `-i`?) in suspension through Steps 1, 2, and 3a while the rest of the syntactic skeleton forms.
 
 Once every syntactic slot is active on the canvas, **Cross-Word Bidirectional Attention** acts like a magnetic field at Step 3b, snapping all inflectional endings into place simultaneously:
-- **Masculine Plural Agreement Chain:** `I` $\leftrightarrow$ `piccol-i` $\leftrightarrow$ `gatt-i` $\leftrightarrow$ `dormiva-no`
+- **Masculine Plural Agreement Chain:** `I` $`\leftrightarrow`$ `piccol-i` $`\leftrightarrow`$ `gatt-i` $`\leftrightarrow`$ `dormiva-no`
 - **Prepositional Fusion (Masculine Singular):** The articulated preposition `sul` (*su + il*, "on + the") first emerges as a spatial root (`s u _`) at Step 3a, and an instant later fuses with the masculine singular noun `tappet-o` to become `s u l` at Step 3b.
 
 ---
 
 ## 📐 Mathematical Formulation
 
-Let a sentence canvas be represented as a 2D discrete tensor $\mathbf{X}_t \in \mathcal{V}^{W \times C}$, where $W$ is the maximum number of words and $C$ is the maximum character length per word.
-Each word $i \in \{1, \dots, W\}$ has a **Macro Priority Tier** $M_i \in \{1, 2, 3\}$, and each character $(i, j)$ has a **Micro Morphological Tier** $\mu_{i,j} \in \{1, 2, 3\}$:
-- $\mu_{i,j} = 1$: Lexical Root (e.g., `gatt-`, `dorm-`, `piccol-`, `su-`)
-- $\mu_{i,j} = 2$: Internal Thematic / Derivational Affix (e.g., imperfect tense `-iva-`, adverbial `-amente`)
-- $\mu_{i,j} = 3$: Relational Inflectional Ending / Agreement Marker (e.g., `I`, `-i`, `-no`, `-l`, `-o`)
+Let a sentence canvas be represented as a 2D discrete tensor $`\mathbf{X}_t \in \mathcal{V}^{W \times C}`$, where $`W`$ is the maximum number of words and $`C`$ is the maximum character length per word.
+Each word $`i \in \{1, \dots, W\}`$ has a **Macro Priority Tier** $`M_i \in \{1, 2, 3\}`$, and each character $`(i, j)`$ has a **Micro Morphological Tier** $`\mu_{i,j} \in \{1, 2, 3\}`$:
+- $`\mu_{i,j} = 1`$: Lexical Root (e.g., `gatt-`, `dorm-`, `piccol-`, `su-`)
+- $`\mu_{i,j} = 2`$: Internal Thematic / Derivational Affix (e.g., imperfect tense `-iva-`, adverbial `-amente`)
+- $`\mu_{i,j} = 3`$: Relational Inflectional Ending / Agreement Marker (e.g., `I`, `-i`, `-no`, `-l`, `-o`)
 
-At discrete macro-time $t \in \{1, 2, 3\}$, the **local age** of word $i$ on the canvas is:
+At discrete macro-time $`t \in \{1, 2, 3\}`$, the **local age** of word $`i`$ on the canvas is:
 
-$$\tau_i(t) = \max(0,\, t - M_i + 1)$$
+```math
+\tau_i(t) = \max(0,\, t - M_i + 1)
+```
 
-The visibility mask of any character $(i, j)$ is governed by two distinct physical regimes:
-1. **Word Activation (Macro Axis):** Word $i$ is active on the canvas iff $\tau_i(t) \ge 1$ (otherwise masked as `<WORD_MASK>`, rendered as `[...]`).
-2. **Internal Morphology (Local Time Regime, $\mu_{i,j} \in \{1, 2\}$):** Character $(i, j)$ is unmasked iff $\tau_i(t) \ge \mu_{i,j}$.
-3. **Morphosyntactic Agreement (Global Phase Synchronization, $\mu_{i,j} = 3$):** Inflectional endings remain masked as `<CHAR_MASK>` (`_`) until the full syntactic skeleton is active ($t = T_{\max}$) and the global agreement phase is triggered.
+The visibility mask of any character $`(i, j)`$ is governed by two distinct physical regimes:
+1. **Word Activation (Macro Axis):** Word $`i`$ is active on the canvas iff $`\tau_i(t) \ge 1`$ (otherwise masked as `<WORD_MASK>`, rendered as `[...]`).
+2. **Internal Morphology (Local Time Regime, $`\mu_{i,j} \in \{1, 2\}`$):** Character $`(i, j)`$ is unmasked iff $`\tau_i(t) \ge \mu_{i,j}`$.
+3. **Morphosyntactic Agreement (Global Phase Synchronization, $`\mu_{i,j} = 3`$):** Inflectional endings remain masked as `<CHAR_MASK>` (`_`) until the full syntactic skeleton is active ($`t = T_{\max}`$) and the global agreement phase is triggered.
 
 ---
 
 ## 🏗️ Neural Architecture (`FractalWaveTransformer`)
 
 The PyTorch model processes the 2D `(Words, Chars)` canvas using a two-stage **Axial & Magnetic Transformer**:
-1. **Vertical Micro-Transformer (Intra-Word Attention):** Operates along the character axis $C$ within each independent word to expand lexical roots into thematic stems.
-2. **Horizontal Macro-Transformer (Cross-Word Agreement Attention):** Operates across the flattened $(W \times C)$ sequence so that active roots and inflectional `_` slots exchange gender, number, and person features across the entire sentence.
+1. **Vertical Micro-Transformer (Intra-Word Attention):** Operates along the character axis $`C`$ within each independent word to expand lexical roots into thematic stems.
+2. **Horizontal Macro-Transformer (Cross-Word Agreement Attention):** Operates across the flattened $`(W \times C)`$ sequence so that active roots and inflectional `_` slots exchange gender, number, and person features across the entire sentence.
 
 ---
 
