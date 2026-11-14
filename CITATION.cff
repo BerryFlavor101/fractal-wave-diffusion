@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use this software or theoretical framework, please cite the paper as below."
+authors:
+  - family-names: "Golshahi"
+    given-names: "Arvin"
+    affiliation: "Independent researcher"
+title: "Fractal Wave Text Diffusion: Hierarchical Two-Axis Coarse-to-Fine Generation via Macro-Syntactic and Micro-Morphological Synchronization"
+version: 1.0.0
+doi: 10.5281/zenodo.24209687
+date-released: 2026-11-14
+url: "https://zenodo.org/records/24209687"
+repository-code: "https://github.com/BerryFlavor101/fractal-wave-diffusion"
+license: AGPL-3.0
+preferred-citation:
+  type: article
+  authors:
+    - family-names: "Golshahi"
+      given-names: "Arvin"
+      affiliation: "Independent researcher"
+  title: "Fractal Wave Text Diffusion: Hierarchical Two-Axis Coarse-to-Fine Generation via Macro-Syntactic and Micro-Morphological Synchronization"
+  year: 2026
+  month: 11
+  publisher: "Zenodo"
+  doi: 10.5281/zenodo.24209687
+  url: "https://zenodo.org/records/24209687"
